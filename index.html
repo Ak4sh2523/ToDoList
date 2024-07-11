@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="C:\Users\Akash\Documents\The ToDoList project\toDoList_css.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <title>ToDoList</title>
+</head>
+<body style="background-color: black;">
+    <div>
+        <nav class="navbar navbar-light bg-warning">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">
+                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample">
+                        <button><img id="side_bar_img" src="C:\Users\Akash\Documents\The ToDoList project\toDoList imgs\side-bar.png"></button>
+                    </a>
+                    &nbsp;&nbsp; Welcome <span style="color: white;"> Procrastinator</span>
+                </span>
+            </div>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Never <span style="color:#FFC107;">FORGET</span> What You <span style="color: #FFC107;">THOUGHT</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body"><br>
+                    <div class="d-grid gap-2">
+                        <button id="showInputBtn" class="btn btn-primary btn-warning">Click to add something</button>
+                        
+                        <div id="inputContainer" style="display: none; margin-top: 20px; ">
+                            <input type="text" id="textInput" class="form-control" placeholder="Here...">
+                            <button id="submitBtn" class="btn btn-warning mt-2">Yeah, You can forget after submitting</button>
+                        </div>
+                    </div><br>
+                    <hr>
+                    
+                    <button id="showInputBtn" class="btn btn-primary btn-warning">Tasks You have done..</button>
+                </div>
+                
+            </div>
+        </nav>
+    </div>
+    <div id="conditionalContainer" class="container mt-5" style="background-color: #FFC107; ">  
+        <p id="datee" ></p>
+        <div id="displayContainer" ></div>
+    </div>
+    <script>
+        document.getElementById('showInputBtn').addEventListener('click', function() {
+            document.getElementById('inputContainer').style.display = 'block';
+        });
+
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const textInput = document.getElementById('textInput').value.trim();
+
+            if (textInput !== '') {
+                addTaskToDisplay(textInput);
+                saveTask(textInput);
+                document.getElementById('textInput').value = '';
+            }
+        });
+
+        function saveTask(task) {
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.push(task);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => addTaskToDisplay(task));
+        }
+
+        function addTaskToDisplay(task) {
+            const displayContainer = document.getElementById('displayContainer');
+            const p = document.createElement('p');
+            p.textContent = task;
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.classList.add('deleteBtn');
+            deleteBtn.addEventListener('click', () => {
+                p.remove();
+                deleteTask(task);
+            });
+
+            p.appendChild(deleteBtn);
+            displayContainer.appendChild(p);
+        }
+
+        function deleteTask(task) {
+            let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks = tasks.filter(t => t !== task);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        document.addEventListener('DOMContentLoaded', loadTasks);
+
+        function onlyDateMonth() {
+            const date = new Date();
+            const day = date.getDate();
+            const month = date.toLocaleString('default', { month: 'long' }); // 'default' locale with 'long' month format
+            return `${day} ${month}`;
+        }
+        
+        
+
+        document.getElementById("datee").innerHTML= onlyDateMonth();
+        let qw = onlyDateMonth()
+       
+    </script>
+</body>
+</html>
